@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1-1 (2) 추론하며 듣기 완벽 마스터</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* Card Flip Animation Styles */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        
+        /* Quiz Option Selection Styles */
+        .quiz-option-btn.selected-correct {
+            background-color: #ecfdf5; border-color: #10b981; color: #065f46;
+        }
+        .quiz-option-btn.selected-wrong {
+            background-color: #fff1f2; border-color: #f43f5e; color: #9f1239;
+        }
+        .quiz-option-btn:disabled { cursor: not-allowed; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-indigo-600 block tracking-wider">중학 국어 1-1 (박현숙) 1-2 단원</span>
+                    <h1 class="text-lg font-extrabold text-slate-900 tracking-tight leading-tight">추론하며 듣기 완벽 마스터</h1>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-4 bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">
+                <span class="text-xs font-semibold text-slate-600">학습 진행률</span>
+                <div class="w-32 bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div id="overall-progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 33%"></div>
+                </div>
+                <span id="overall-progress-text" class="text-xs font-bold text-indigo-600">33%</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200 sticky top-16 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex space-x-2 py-2 overflow-x-auto" aria-label="Tabs">
+                <button onclick="switchTab('concept')" id="tab-btn-concept" class="tab-btn flex-1 min-w-[150px] text-center py-3 px-1 border-b-2 font-bold text-sm transition-all duration-200 border-indigo-600 text-indigo-600 flex items-center justify-center space-x-2 bg-indigo-50/30 rounded-t-lg">
+                    <span>추론하며 듣기</span>
+                </button>
+                <button onclick="switchTab('vocab')" id="tab-btn-vocab" class="tab-btn flex-1 min-w-[150px] text-center py-3 px-1 border-b-2 font-medium text-sm transition-all duration-200 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center justify-center space-x-2">
+                    <span>어휘 정리</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-btn-quiz" class="tab-btn flex-1 min-w-[150px] text-center py-3 px-1 border-b-2 font-medium text-sm transition-all duration-200 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center justify-center space-x-2">
+                    <span>형성 평가</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content Containers -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ==================== TAB 1: 추론하며 듣기 ==================== -->
+        <section id="section-concept" class="tab-section space-y-8 animate-fadeIn">
+            <!-- Summary Banner -->
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10">
+                    <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </div>
+                <div class="max-w-2xl">
+                    <span class="bg-white/20 text-white font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">핵심 개념 정리</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold mb-3">숨겨진 생각을 꺼내는 눈, "추론하며 듣기"</h2>
+                    <p class="text-indigo-100 text-sm sm:text-base leading-relaxed font-light">
+                        담화 속 표면적인 소리에만 의존하지 않고, 주변의 정황과 단서를 모아 발화자의 진짜 마음을 파악하는 과정.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Concept Row 1: 뜻 & 효과 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 뜻 Card -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">뜻</h3>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        담화에서 표면적으로 드러나지 않는 화자의 의도나 관점을 다양한 단서와 상황 맥락을 바탕으로 미루어 파악하며 듣는 것.
+                    </p>
+                </div>
+
+                <!-- 효과 Card -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">추론하며 듣기의 효과</h3>
+                    </div>
+                    <ul class="text-slate-600 leading-relaxed text-base space-y-2">
+                        <li class="flex items-start"><span class="mr-2 text-emerald-500">✔</span>상대방의 숨은 의도와 마음을 깊이 이해함.</li>
+                        <li class="flex items-start"><span class="mr-2 text-emerald-500">✔</span>상대방과의 불필요한 오해 방지.</li>
+                        <li class="flex items-start"><span class="mr-2 text-emerald-500">✔</span>명확하고 원활한 의사소통 가능.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Concept Row 2: 상황 맥락 (2x2 Grid) -->
+            <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">상황 맥락의 구성 요소</h3>
+                        <p class="text-sm text-slate-500 mt-1">대화의 진짜 뜻을 파악하기 위해 점검해야 하는 4가지 주요 단서.</p>
+                    </div>
+                </div>
+
+                <!-- 2단 2열 배열 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex items-center space-x-4">
+                        <span class="text-3xl">🗣️</span>
+                        <div>
+                            <span class="font-bold text-slate-800 block text-lg">화자와 청자</span>
+                            <span class="text-sm text-slate-600">대화 상대의 관계와 사회적 지위.</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex items-center space-x-4">
+                        <span class="text-3xl">📍</span>
+                        <div>
+                            <span class="font-bold text-slate-800 block text-lg">시간과 장소</span>
+                            <span class="text-sm text-slate-600">담화가 발생한 구체적 시공간.</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex items-center space-x-4">
+                        <span class="text-3xl">🎯</span>
+                        <div>
+                            <span class="font-bold text-slate-800 block text-lg">의도와 목적</span>
+                            <span class="text-sm text-slate-600">말을 함으로써 달성할 진짜 용건.</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex items-center space-x-4">
+                        <span class="text-3xl">🤝</span>
+                        <div>
+                            <span class="font-bold text-slate-800 block text-lg">배경과 맥락</span>
+                            <span class="text-sm text-slate-600">사회·문화적 규칙 및 기본 대전제.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Concept 3: Flashcards of Situational Ambiguity (Flipping Interaction) -->
+            <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-indigo-600 tracking-wide block uppercase mb-1">체험식 플립 학습</span>
+                    <h3 class="text-xl font-bold text-slate-900">말의 표면적 의미와 속뜻 비교</h3>
+                    <p class="text-sm text-slate-500 mt-1">카드를 클릭하여 다양한 상황 속 문장의 진짜 의미를 확인해 보세요.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div onclick="toggleCard(this)" class="flip-card h-56 cursor-pointer">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front bg-slate-50 border-2 border-dashed border-indigo-200 p-6 flex flex-col justify-center items-center hover:border-indigo-400 transition-colors duration-300">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded-full mb-3">의사선생님의 말</span>
+                                <h4 class="text-2xl font-black text-slate-800">"어때요?"</h4>
+                                <span class="text-xs text-indigo-500 font-semibold mt-4 bg-white px-3 py-1 rounded-full border border-indigo-100">클릭하여 속뜻 보기 ↻</span>
+                            </div>
+                            <div class="flip-card-back bg-indigo-600 text-white p-6 flex flex-col justify-center items-center">
+                                <span class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full mb-3">상황적 의도</span>
+                                <p class="text-lg font-bold leading-snug">치료한 부위의 상태 확인.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div onclick="toggleCard(this)" class="flip-card h-56 cursor-pointer">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front bg-slate-50 border-2 border-dashed border-violet-200 p-6 flex flex-col justify-center items-center hover:border-violet-400 transition-colors duration-300">
+                                <span class="bg-violet-100 text-violet-800 text-xs font-bold px-2 py-1 rounded-full mb-3">친구가 새 옷을 입었을 때</span>
+                                <h4 class="text-2xl font-black text-slate-800">"이거 괜찮아?"</h4>
+                                <span class="text-xs text-violet-500 font-semibold mt-4 bg-white px-3 py-1 rounded-full border border-violet-100">클릭하여 속뜻 보기 ↻</span>
+                            </div>
+                            <div class="flip-card-back bg-violet-600 text-white p-6 flex flex-col justify-center items-center">
+                                <span class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full mb-3">상황적 의도</span>
+                                <p class="text-lg font-bold leading-snug">옷이 잘 어울리는지 묻기 위함.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div onclick="toggleCard(this)" class="flip-card h-56 cursor-pointer">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front bg-slate-50 border-2 border-dashed border-rose-200 p-6 flex flex-col justify-center items-center hover:border-rose-400 transition-colors duration-300">
+                                <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2 py-1 rounded-full mb-3">기자 보도 속 구절</span>
+                                <h4 class="text-xl font-black text-slate-800">"처벌 규정이 없는 안전모..."</h4>
+                                <span class="text-xs text-rose-500 font-semibold mt-4 bg-white px-3 py-1 rounded-full border border-rose-100">클릭하여 속뜻 보기 ↻</span>
+                            </div>
+                            <div class="flip-card-back bg-rose-600 text-white p-6 flex flex-col justify-center items-center">
+                                <span class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full mb-3">상황적 의도</span>
+                                <p class="text-lg font-bold leading-snug">실효성 있는 제도의 필요성 강조.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: 어휘 정리 ==================== -->
+        <section id="section-vocab" class="tab-section hidden space-y-8 animate-fadeIn">
+            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-600 tracking-wide block uppercase">필수 용어 사전</span>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">교과서 필수 어휘 대시보드</h3>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500 mt-3 sm:mt-0 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200">총 14개 단어 완벽 정리</span>
+                </div>
+
+                <!-- Word Card Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
+                    <!-- Word 1 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">개념 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">담화 <span class="text-sm font-medium text-slate-400 ml-1">(談話)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            서로 이야기를 주고받음. 또는 둘 이상의 문장이 연속되어 이루어지는 말의 단위.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 그들의 유쾌한 담화는 밤늦도록 이어졌다.
+                        </div>
+                    </div>
+
+                    <!-- Word 2 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">개념 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">맥락 <span class="text-sm font-medium text-slate-400 ml-1">(脈絡)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사물 또는 표현 등이 서로 긴밀하게 이어져 있는 고유한 관계나 연관성.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 대화의 전후 맥락을 파악하여 속뜻을 읽어내다.
+                        </div>
+                    </div>
+
+                    <!-- Word 3 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">개념 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">추론 <span class="text-sm font-medium text-slate-400 ml-1">(推論)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            어떠한 사실이나 판단을 근거로 삼아, 다른 새로운 판단을 미루어 끌어내는 사고의 과정.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 주변 단서와 상황을 통한 논리적인 추론.
+                        </div>
+                    </div>
+
+                    <!-- Word 4 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">관점 <span class="text-sm font-medium text-slate-400 ml-1">(觀點)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사물이나 현상을 관찰할 때, 그 사람이 바라보고 생각하는 특유의 방향 또는 처지.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 서로 다른 관점의 주장이 팽팽하게 맞서다.
+                        </div>
+                    </div>
+
+                    <!-- Word 5 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">개의치 않다 <span class="text-sm font-medium text-slate-400 ml-1">(介意-)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            어떤 사소한 일 등을 마음에 두고 깊이 생각하거나 지나치게 신경을 쓰지 않음.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 타인의 비판에 개의치 않고 내 길을 가다.
+                        </div>
+                    </div>
+
+                    <!-- Word 6 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">유명무실 <span class="text-sm font-medium text-slate-400 ml-1">(有名無實)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            이름만 그럴듯하게 세상에 남아 있고, 그에 걸맞은 알맹이나 실질적인 가치는 없는 상태.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 단속이 전혀 이루어지지 않아 제도가 유명무실하다.
+                        </div>
+                    </div>
+                    
+                    <!-- Word 7 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">핵심 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">해석 <span class="text-sm font-medium text-slate-400 ml-1">(解釋)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사물이나 행위 등의 내용을 판단하고 이해하는 일. 또는 그 내용.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 시에 담긴 시인의 마음을 올바르게 해석하다.
+                        </div>
+                    </div>
+
+                    <!-- Word 8 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">핵심 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">이해하다 <span class="text-sm font-medium text-slate-400 ml-1">(理解-)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사리의 본질이나 맥락을 바르게 분별하여 알다. 또는 남의 사정을 너그럽게 받아들이다.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 친구의 어려운 상황을 깊이 공감하고 이해하다.
+                        </div>
+                    </div>
+
+                    <!-- Word 9 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">개정하다 <span class="text-sm font-medium text-slate-400 ml-1">(改正-)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            주로 문서의 내용이나 법규, 제도 등을 고쳐 바르게 하다.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 시대의 흐름에 맞춰 낡은 규칙을 개정하다.
+                        </div>
+                    </div>
+
+                    <!-- Word 10 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">표면적 <span class="text-sm font-medium text-slate-400 ml-1">(表面的)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사물의 겉으로 드러나거나 눈에 띄는 것. 또는 그런 상태.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 말의 표면적인 의미만으로는 본뜻을 파악하기 어렵다.
+                        </div>
+                    </div>
+
+                    <!-- Word 11 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">대안 <span class="text-sm font-medium text-slate-400 ml-1">(代案)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            어떤 안(案)이나 제도를 대신할 수 있는 새롭고 실질적인 방안.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 처벌 위주의 방식보다 근본적인 대안을 찾아야 한다.
+                        </div>
+                    </div>
+
+                    <!-- Word 12 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">압축적 <span class="text-sm font-medium text-slate-400 ml-1">(壓縮的)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            내용이나 절차 등을 요약하거나 핵심만 추려 생략하여 줄인 것.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 화자의 의도를 요약하여 압축적으로 제시하다.
+                        </div>
+                    </div>
+
+                    <!-- Word 13 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all">
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">내용 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">실효성 <span class="text-sm font-medium text-slate-400 ml-1">(實效性)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            실제로 기대했던 효과를 나타내거나 발휘하는 성질이나 정도.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-emerald-500 mr-1 font-bold">예시</span> 그 정책은 사람들에게 안 지켜져 실효성이 부족하다.
+                        </div>
+                    </div>
+
+                    <!-- Word 14 -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all">
+                        <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[10px] font-black tracking-widest block mb-3 w-max">개념 어휘</span>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2">요소 <span class="text-sm font-medium text-slate-400 ml-1">(要素)</span></h4>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            사물의 성립이나 특정 상황 구성에 없어서는 안 될 꼭 필요한 근본적인 조건이나 부분.
+                        </p>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100 font-medium">
+                            <span class="text-indigo-500 mr-1 font-bold">예시</span> 화자와 청자는 상황 맥락을 구성하는 핵심 요소이다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 3: 형성 평가 (15 Questions) ==================== -->
+        <section id="section-quiz" class="tab-section hidden space-y-6 animate-fadeIn">
+            <!-- Quiz Header -->
+            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs font-bold text-indigo-600 tracking-wide block uppercase mb-1">최종 실력 점검</span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">형성 평가</h3>
+                    <p class="text-sm text-slate-500 mt-2">교과서 쪽지 시험 및 어휘 시험지 내용을 종합한 15개의 실전 형성 평가 문항입니다. 알맞은 번호를 클릭하세요.</p>
+                </div>
+                <div class="bg-slate-50 px-6 py-4 rounded-2xl border border-slate-200 text-center min-w-[140px]">
+                    <span class="block text-xs font-bold text-slate-500 mb-1">나의 점수</span>
+                    <div class="text-3xl font-black text-indigo-600"><span id="quiz-score-display">0</span> <span class="text-lg text-slate-400">/ 15</span></div>
+                </div>
+            </div>
+
+            <!-- Quiz Container (Generated by JS) -->
+            <div id="quiz-container" class="space-y-4">
+                <!-- JS will populate questions here -->
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+            <p class="text-xs font-medium text-slate-500">본 어플리케이션은 비상교육 중학 국어 1-1 박현숙 교과서의 '추론하며 듣기' 학습 자료를 고도화하여 구성되었습니다.</p>
+            <p class="text-xs">&copy; 2026 국어 학습 발전 연구소. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic Javascript -->
+    <script>
+        // Tab Navigation Logic
+        let currentTab = 'concept';
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // Hide all sections
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Show target section
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+
+            // Reset tab styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'text-indigo-600', 'font-bold', 'bg-indigo-50/30', 'rounded-t-lg');
+                btn.classList.add('border-transparent', 'text-slate-500', 'font-medium');
+            });
+            // Set active tab style
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500', 'font-medium');
+            activeBtn.classList.add('border-indigo-600', 'text-indigo-600', 'font-bold', 'bg-indigo-50/30', 'rounded-t-lg');
+
+            // Update progress bar
+            let progress = 33;
+            if (tabId === 'vocab') progress = 66;
+            if (tabId === 'quiz') progress = 100;
+            document.getElementById('overall-progress-bar').style.width = `${progress}%`;
+            document.getElementById('overall-progress-text').textContent = `${progress}%`;
+        }
+
+        // Flip Card Logic
+        function toggleCard(cardElement) {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // ==========================================
+        // 형성 평가 (15문항: PDF 자료 기반 재구성)
+        // ==========================================
+        const quizData = [
+            // O/X 유형 5문제
+            {
+                q: "[O/X 퀴즈] 같은 말이라도 담화 상황에 따라 그 의미가 완전히 달라질 수 있다.",
+                options: ["① O", "② X"],
+                ans: 0,
+                exp: "문장의 표면적인 뜻이 같아도 시간, 장소, 대화의 목적 등의 '상황 맥락'에 따라 속뜻은 달라집니다."
+            },
+            {
+                q: "[O/X 퀴즈] 상황 맥락이란 담화가 이루어지는 구체적인 환경이나 정황을 의미한다.",
+                options: ["① O", "② X"],
+                ans: 0,
+                exp: "화자와 청자의 관계, 시공간적 배경, 의도와 목적 등이 포함된 구체적 상황을 '상황 맥락'이라 합니다."
+            },
+            {
+                q: "[O/X 퀴즈] 담화 상황에서 화자의 의도는 반드시 표면적인 문장으로 드러나야만 한다.",
+                options: ["① O", "② X"],
+                ans: 1,
+                exp: "화자의 속마음이나 진짜 의도는 겉으로 명확하게 드러나지 않고 상황 맥락 속에 숨겨져 있는 경우가 흔합니다."
+            },
+            {
+                q: "[O/X 퀴즈] \"과자 좀 먹을래?\"라는 친구의 물음에 \"괜찮아.\"라고 답했다면, 이는 수락과 부탁의 의미이다.",
+                options: ["① O", "② X"],
+                ans: 1,
+                exp: "이 상황에서 \"괜찮아.\"는 먹지 않겠다는 우회적인 '거절'의 의미로 사용되었습니다."
+            },
+            {
+                q: "[O/X 퀴즈] 수업 중에 장난치는 학생에게 선생님이 \"지금 뭐하니?\"라고 묻는 것은 단순히 행동이 궁금해서 묻는 질문이다.",
+                options: ["① O", "② X"],
+                ans: 1,
+                exp: "수업 분위기를 흐리는 학생에게 선생님이 던지는 질문은 호기심이 아니라 행동을 멈추라는 '꾸중'과 '질책'의 의미입니다."
+            },
+            // 사지선다형 10문제
+            {
+                q: "추론하며 듣기에 대한 설명으로 가장 알맞지 않은 것은?",
+                options: [
+                    "① 여러 가지 정보와 상황 맥락을 고려하며 들어야 한다.",
+                    "② 화자의 겉으로 드러나지 않은 의도를 미루어 파악하는 것이다.",
+                    "③ 의도를 파악하기 위해 대화의 흐름을 자주 끊고 질문해야 한다.",
+                    "④ 의사소통을 더욱 명확하고 원활하게 만들어 준다."
+                ],
+                ans: 2,
+                exp: "추론하며 듣기는 흐름을 끊지 않고도 맥락을 바탕으로 숨은 의도를 스스로 짐작하여 대화를 원만하게 이어가는 기술입니다."
+            },
+            {
+                q: "추론하며 들을 때 고려해야 하는 '상황 맥락'의 구성 요소로 알맞지 않은 것은?",
+                options: [
+                    "① 화자와 청자",
+                    "② 시간과 공간",
+                    "③ 화자의 개인 자산",
+                    "④ 의도와 목적"
+                ],
+                ans: 2,
+                exp: "상황 맥락의 핵심 요소에는 화자와 청자, 시간과 공간, 의도와 목적, 배경 지식 등이 포함되며, 개인 자산은 상황을 결정짓는 핵심 요소가 아닙니다."
+            },
+            {
+                q: "약속 시간에 한참 늦은 친구에게 \"지금 몇 시니?\"라고 말했을 때, 이 말에 담긴 속뜻으로 가장 알맞은 것은?",
+                options: [
+                    "① 현재의 정확한 시각을 알려 달라는 요청",
+                    "② 지각한 것에 대한 질책과 꾸중",
+                    "③ 시계가 고장 났는지 확인하려는 질문",
+                    "④ 빨리 목적지로 뛰어가자는 재촉"
+                ],
+                ans: 1,
+                exp: "시간을 몰라서 묻는 것이 아니라 약속 시간을 어기고 늦은 상대방의 태도를 타박하고 질책하려는 의도입니다."
+            },
+            {
+                q: "교실 청소를 도와 달라는 부탁에 \"내가 어제 팔을 다쳤어.\"라고 대답했다. 이 말에 숨은 진짜 의도는?",
+                options: [
+                    "① 다친 팔을 자랑하며 위로를 구하는 것",
+                    "② 다쳐서 청소를 도와주기 어렵다는 완곡한 거절",
+                    "③ 병원에 데려다 달라는 직접적인 부탁",
+                    "④ 나를 대신해 청소를 다 해 달라는 명령"
+                ],
+                ans: 1,
+                exp: "부탁을 직설적으로 거절하기 어려울 때, 팔을 다쳤다는 자신의 구체적인 피치 못할 사정을 들어 부드럽게 거절하는 표현입니다."
+            },
+            {
+                q: "외출하려는 자녀에게 엄마가 \"오늘 비 온다.\"라고 말했을 때, 가장 적절한 의미는?",
+                options: [
+                    "① 나갈 때 우산을 챙기라는 따뜻한 당부",
+                    "② 비가 오니 절대 외출하지 말라는 강한 금지",
+                    "③ 기상청의 날씨 예보를 단순하게 알리려는 목적",
+                    "④ 약속을 취소하고 집안일을 도우라는 명령"
+                ],
+                ans: 0,
+                exp: "비가 올 예정이니 비를 맞지 않도록 우산을 잊지 말고 챙겨 나가라는 부모님의 걱정 어린 당부입니다."
+            },
+            {
+                q: "다음 중 '서로 이야기를 주고받음. 또는 둘 이상의 문장이 연속되어 이루어지는 말의 단위'를 뜻하는 단어는?",
+                options: [
+                    "① 담화 (談話)",
+                    "② 관점 (觀點)",
+                    "③ 추론 (推論)",
+                    "④ 맥락 (脈絡)"
+                ],
+                ans: 0,
+                exp: "연속적인 문장들의 모임이나 이야기를 나누는 상호 작용을 '담화'라고 정의합니다."
+            },
+            {
+                q: "상대방의 말에 담긴 숨은 의도를 추론하며 들을 때 얻을 수 있는 효과로 가장 적절한 것은?",
+                options: [
+                    "① 대화에 소요되는 시간을 물리적으로 크게 단축할 수 있다.",
+                    "② 대화의 주도권을 잡아 내 생각과 관점을 일방적으로 강요할 수 있다.",
+                    "③ 숨은 의도를 파악하여 오해 없이 명확하고 원활한 의사소통을 할 수 있다.",
+                    "④ 겉으로 드러난 말만 문자 그대로 해석하게 되어 소통이 단순해진다."
+                ],
+                ans: 2,
+                exp: "의도를 바르게 추론하며 들으면 불필요한 오해를 방지하고 서로의 본뜻을 파악하여 명확하고 원활한 의사소통이 이루어집니다."
+            },
+            {
+                q: "다음 빈칸에 들어갈 알맞은 어휘는?\n\"사건의 전후 (      )을/를 상대방이 잘 이해할 수 있도록 설명해야 한다.\"",
+                options: [
+                    "① 개정 (改正)",
+                    "② 맥락 (脈絡)",
+                    "③ 소통 (疏通)",
+                    "④ 당부 (當付)"
+                ],
+                ans: 1,
+                exp: "사물이나 현상들이 앞뒤로 긴밀하게 서로 연결되어 있는 연관성이나 관계를 '맥락'이라고 합니다."
+            },
+            {
+                q: "'어떤 일 등을 마음에 두고 생각하거나 지나치게 신경을 쓰지 않다'라는 뜻의 어휘는?",
+                options: [
+                    "① 유명무실하다",
+                    "② 명확하다",
+                    "③ 원활하다",
+                    "④ 개의치 않다"
+                ],
+                ans: 3,
+                exp: "외부의 자잘한 비판이나 사소한 일에 마음이 흔들리지 않을 때 '개의치 않다'라고 표현합니다."
+            },
+            {
+                q: "'이름만 그럴듯하게 남아있고 실제 알맹이나 실속은 전혀 없다'라는 뜻을 지닌 사자성어로 알맞은 것은?",
+                options: [
+                    "① 유명무실 (有名無實)",
+                    "② 자책감 (自責感)",
+                    "③ 궁극적 (窮極的)",
+                    "④ 압축적 (壓縮的)"
+                ],
+                ans: 0,
+                exp: "제도나 규정이 마련되어 있으나 제대로 지켜지거나 단속되지 않아 실효성이 없는 상태를 '유명무실'이라고 합니다."
+            }
+        ];
+
+        let score = 0;
+        let answeredQuestions = new Set();
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = ''; 
+
+            quizData.forEach((item, index) => {
+                const qNum = index + 1;
+                
+                // Question Card
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm transition-all";
+                card.id = `quiz-card-${qNum}`;
+
+                // Question Title
+                const qTitle = document.createElement('p');
+                qTitle.className = "text-slate-900 font-extrabold mb-5 text-sm sm:text-base leading-relaxed whitespace-pre-line";
+                qTitle.innerHTML = `<span class="text-indigo-600 mr-2 text-lg">Q${qNum}.</span> ${item.q}`;
+                card.appendChild(qTitle);
+
+                // Options Grid (O/X = 2 cols, 사지선다 = 2 cols)
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+                
+                item.options.forEach((optText, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = "quiz-option-btn p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 hover:bg-indigo-50 hover:border-indigo-200 transition-colors text-left";
+                    btn.textContent = optText;
+                    btn.onclick = () => handleAnswer(qNum, optIndex, btn, item.ans, item.exp);
+                    optionsGrid.appendChild(btn);
+                });
+                card.appendChild(optionsGrid);
+
+                // Feedback Container
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.id = `quiz-feedback-${qNum}`;
+                feedbackDiv.className = "hidden mt-5 p-4 rounded-xl text-xs sm:text-sm font-bold border leading-relaxed";
+                card.appendChild(feedbackDiv);
+
+                container.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qNum, selectedOptIndex, btnElement, correctOptIndex, explanation) {
+            // Disable re-answering
+            if (answeredQuestions.has(qNum)) return;
+            answeredQuestions.add(qNum);
+
+            const card = document.getElementById(`quiz-card-${qNum}`);
+            const allBtns = card.querySelectorAll('.quiz-option-btn');
+            const feedbackDiv = document.getElementById(`quiz-feedback-${qNum}`);
+
+            // Lock buttons
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const isCorrect = (selectedOptIndex === correctOptIndex);
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('quiz-score-display').textContent = score;
+                
+                btnElement.classList.add('selected-correct');
+                feedbackDiv.classList.remove('hidden');
+                feedbackDiv.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+                feedbackDiv.innerHTML = `⭕ <b>정답입니다!</b><br><span class="font-medium mt-1 block">${explanation}</span>`;
+            } else {
+                btnElement.classList.add('selected-wrong');
+                allBtns[correctOptIndex].classList.add('selected-correct');
+                
+                feedbackDiv.classList.remove('hidden');
+                feedbackDiv.classList.add('bg-rose-50', 'text-rose-700', 'border-rose-200');
+                feedbackDiv.innerHTML = `❌ <b>오답입니다.</b><br><span class="font-medium mt-1 block">${explanation}</span>`;
+            }
+        }
+
+        // Initialize quiz on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+        });
+
+    </script>
+</body>
+</html>
